@@ -20,10 +20,7 @@ api.get("/", async (request) => {
 const bread = new Bread({ port: 3000 });
 bread.use("/", log);
 bread.use("/api", api);
-bread.use("/favicon.ico", serveStatic({ root: "./" }));
-bread.get("/", async (request) => {
-    return new Response("Hello World");
-});
+bread.use("/", serveStatic({ file: "./public/index.html" }));
 
 console.log(`Server running on http://localhost:${bread.port}`);
 Bun.serve(bread);
