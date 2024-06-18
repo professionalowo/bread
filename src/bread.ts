@@ -1,15 +1,18 @@
 import type { ServeOptions } from "bun";
 import { BreadRouter } from "./internal/router";
 
-export type MiddlewareHandler = (request: Request) => Response | Promise<Response>;
+export type MiddlewareHandler = (request: Request, next: Next) => Response | Promise<Response>;
 export type Next = {
-    (): Promise<void>
+    (): Promise<Response>
 }
+export type BreadOptions = Partial<{ port: number }>;
 
-type BreadOptions = { port: number }
+/**
+ * @implements {ServeOptions}
+ */
 class Bread implements ServeOptions {
     protected readonly router = new BreadRouter();
-    public readonly port: number;
+    public readonly port?: number;
     constructor({ port }: BreadOptions = { port: 3000 }) {
         this.port = port;
     }

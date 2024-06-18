@@ -1,4 +1,4 @@
-import type { MiddlewareHandler } from "../bread";
+import type { MiddlewareHandler, Next } from "../bread";
 
 class BreadRouter {
     protected handlers: Map<string, MiddlewareHandler[]> = new Map<string, MiddlewareHandler[]>();
@@ -12,17 +12,31 @@ class BreadRouter {
     }
     public async applyMiddlewares(request: Request): Promise<Response> {
         const handlers = this.getHandlers(request);
-        let res = new Response("Hello from BreadRouter!");
-        for (const handler of handlers) {
-            res = await handler(request);
-        }
-        return res;
+        return this.executeHandlers(request, handlers);
     }
 
     private getHandlers(request: Request): MiddlewareHandler[] {
         const { pathname } = new URL(request.url);
         const handlers = this.handlers.get(pathname) || [];
         return handlers;
+    }
+
+    private async executeHandlers(request: Request, handlers: MiddlewareHandler[]): Promise<Response> {
+        let index = -1;
+
+        const next = async (): Promise<Response> => {
+            index++;
+            if (index < handlers.length) {
+                console.log(index);
+                return handlers[index](request, next);
+            } else {
+                // Default response if no middleware provides a response
+                //TODO: Call route handlers here
+                return new Response('Not Found', { status: 404 });
+            }
+        };
+
+        return next();
     }
 }
 
