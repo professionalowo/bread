@@ -1,10 +1,9 @@
 import type { ServeOptions } from "bun";
 import { BreadRouter } from "./internal/router";
+import type { RouteHandlerFunction } from "./internal/path/routePathMapping";
+import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapping";
 
-export type MiddlewareHandler = (request: Request, next: Next) => Response | Promise<Response>;
-export type Next = {
-    (): Promise<Response>
-}
+
 export type BreadOptions = Partial<{ port: number }>;
 
 /**
@@ -22,21 +21,31 @@ class Bread implements ServeOptions {
     }
 
     public middleware = async (request: Request, next: Next): Promise<Response> => {
-        await next();
         return this.fetch(request);
     };
 
     public use(path: string, handler: MiddlewareHandler,): void;
-    public use(path: string, handler: ReadonlyArray<MiddlewareHandler>,): void;
+    public use(path: string, handler: Array<MiddlewareHandler>,): void;
     public use(path: string, handler: Bread,): void;
 
-    public use(path: string, handler: MiddlewareHandler | ReadonlyArray<MiddlewareHandler> | Bread): void {
-        if (handler instanceof Bread) {
-            this.router.addMiddleware(path, handler.middleware);
-        } else {
-            this.router.addMiddleware(path, handler);
-        }
+    public use(path: string, handler: MiddlewareHandler | Array<MiddlewareHandler> | Bread): void {
+        this.router.addMiddleware(path, handler);
+    }
 
+    public put(path: string, handler: RouteHandlerFunction): void {
+        this.router.addPut(path, handler);
+    }
+
+    public delete(path: string, handler: RouteHandlerFunction): void {
+        this.router.addDelete(path, handler);
+    }
+
+    public post(path: string, handler: RouteHandlerFunction): void {
+        this.router.addPost(path, handler);
+    }
+
+    public get(path: string, handler: RouteHandlerFunction): void {
+        this.router.addGet(path, handler);
     }
 }
 
