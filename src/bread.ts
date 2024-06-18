@@ -20,11 +20,23 @@ class Bread implements ServeOptions {
     public fetch = async (request: Request): Promise<Response> => {
         return this.router.applyMiddlewares(request);
     }
+
+    public middleware = async (request: Request, next: Next): Promise<Response> => {
+        await next();
+        return this.fetch(request);
+    };
+
     public use(path: string, handler: MiddlewareHandler,): void;
     public use(path: string, handler: ReadonlyArray<MiddlewareHandler>,): void;
+    public use(path: string, handler: Bread,): void;
 
-    public use(path: string, handler: MiddlewareHandler | ReadonlyArray<MiddlewareHandler>): void {
-        this.router.addMiddleware(path, handler);
+    public use(path: string, handler: MiddlewareHandler | ReadonlyArray<MiddlewareHandler> | Bread): void {
+        if (handler instanceof Bread) {
+            this.router.addMiddleware(path, handler.middleware);
+        } else {
+            this.router.addMiddleware(path, handler);
+        }
+
     }
 }
 

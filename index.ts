@@ -10,5 +10,11 @@ bread.use("/", async (request, next) => {
     return new Response("Hello World");
 });
 
+const api = new Bread();
+api.use("/api", async (request, next) => {
+    return new Response("API");
+});
+bread.use("/api", api);
+
 console.log(`Server running on http://localhost:${bread.port}`);
 Bun.serve(bread);
