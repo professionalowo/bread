@@ -1,5 +1,4 @@
-import { Bread, type BreadContext } from "./src/bread";
-import type { Next } from "./src/internal/path/middlewarePathMapping";
+import { Bread } from "./src/bread";
 import { log } from "./src/middlewares/log";
 import { serveStatic } from "./src/middlewares/serveStatic";
 
