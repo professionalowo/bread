@@ -1,11 +1,7 @@
 import { Bread, type BreadContext } from "./src/bread";
 import type { Next } from "./src/internal/path/middlewarePathMapping";
+import { log } from "./src/middlewares/log";
 import { serveStatic } from "./src/middlewares/serveStatic";
-
-function log({ request }: BreadContext, next: Next) {
-    console.log(`-> ${request.method} ${new URL(request.url).pathname}`);
-    return next();
-}
 
 const posts = new Bread();
 posts.get("/", async (c) => {
