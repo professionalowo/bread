@@ -14,7 +14,7 @@ posts.get("/", async (c) => {
 const api = new Bread();
 api.use("/posts", posts);
 api.get("/", async (c) => {
-    return new Response("API");
+    return c.json({ message: "API" });
 });
 
 const bread = new Bread({ port: 3000 });
