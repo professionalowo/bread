@@ -46,9 +46,9 @@ class BreadRouter {
                     if (url === "") {
                         url = "/";
                     }
-                    return handler.middleware(new Request(url, request), next);
+                    return handler.middleware({ request: new Request(url, request), params: {} }, next);
                 }
-                return handler(request, next);
+                return handler({ request, params: {} }, next);
             } else {
                 // Default response if no middleware provides a response
                 //TODO: Call route handlers here
@@ -68,7 +68,7 @@ class BreadRouter {
                         break;
                 }
                 if (typeof handler === "function") {
-                    return handler(request);
+                    return handler({ request, params: {} });
                 }
                 return new Response('Not Found', { status: 404 });
             }

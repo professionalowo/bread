@@ -20,7 +20,7 @@ class Bread implements ServeOptions {
         return this.router.applyMiddlewares(request);
     }
 
-    public middleware = async (request: Request, next: Next): Promise<Response> => {
+    public middleware = async ({ request }: BreadContext, next: Next): Promise<Response> => {
         return this.fetch(request);
     };
 
