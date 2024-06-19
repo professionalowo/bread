@@ -3,7 +3,7 @@ import { BreadRouter } from "./internal/router";
 import type { RouteHandlerFunction } from "./internal/path/routePathMapping";
 import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapping";
 
-
+export type BreadContext = { request: Request, params: Record<string, string> };
 export type BreadOptions = Partial<{ port: number }>;
 
 /**
@@ -50,4 +50,4 @@ class Bread implements ServeOptions {
 }
 
 
-export { Bread };
+export { Bread, type MiddlewareHandler };

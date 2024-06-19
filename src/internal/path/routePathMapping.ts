@@ -1,5 +1,6 @@
+import type { BreadContext } from "../../bread";
 import { PathMapping, type PathMappingHandler } from "./pathMapping";
-export type RouteHandlerFunction = (request: Request) => Response | Promise<Response>
+export type RouteHandlerFunction = (c: BreadContext) => Response | Promise<Response>
 
 
 class RoutePathMapping extends PathMapping<RouteHandlerFunction> {

@@ -9,13 +9,13 @@ export function serveStatic(props: ServeStaticOptions): MiddlewareHandler {
 }
 
 function handleStaticFile({ file: filePath }: { file: string }): MiddlewareHandler {
-    return async (request) => {
+    return async (c) => {
         return new Response(file(filePath));
     }
 }
 function handleStaticDir({ root }: { root: string }): MiddlewareHandler {
     const sanitizedRoot = sanitize(root);
-    return async (request) => {
+    return async ({ request }) => {
         const { pathname } = new URL(request.url);
         return new Response(file(`${sanitizedRoot}${pathname}`));
     };

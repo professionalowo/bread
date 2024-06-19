@@ -1,19 +1,19 @@
-import { Bread } from "./src/bread";
+import { Bread, type BreadContext } from "./src/bread";
 import type { Next } from "./src/internal/path/middlewarePathMapping";
 import { serveStatic } from "./src/middlewares/serveStatic";
 
-function log(request: Request, next: Next) {
+function log({ request }: BreadContext, next: Next) {
     console.log(`-> ${request.method} ${new URL(request.url).pathname}`);
     return next();
 }
 
 const posts = new Bread();
-posts.get("/", async (request) => {
+posts.get("/", async (c) => {
     return new Response("Posts");
 });
 const api = new Bread();
 api.use("/posts", posts);
-api.get("/", async (request) => {
+api.get("/", async (c) => {
     return new Response("API");
 });
 
