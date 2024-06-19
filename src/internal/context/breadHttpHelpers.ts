@@ -1,5 +1,5 @@
 export class BreadHelpers {
-    public json(arg: unknown, init?: ResponseInit | undefined): Response {
+    public json<T extends {}>(arg: T, init?: ResponseInit | undefined): Response {
         return new Response(JSON.stringify(arg),
             {
                 ...init,
