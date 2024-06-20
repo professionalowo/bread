@@ -14,9 +14,10 @@ api.get("/", async (c) => {
 });
 
 const bread = new Bread({ port: 3000 });
+
 bread.use("/", log);
 bread.use("/api", api);
 bread.use("/", serveStatic({ root: "./public" }));
-bread.use("/", serveStatic({ file: "./public/index.html" }))
+bread.use("/", serveStatic({ file: "./public/index.html" }));
 console.log(`Server running on http://localhost:${bread.port}`);
 Bun.serve<ServeOptions>(bread);
