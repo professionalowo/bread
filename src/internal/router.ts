@@ -1,3 +1,4 @@
+import type { Server } from "bun";
 import { BreadContext } from "./context/context";
 import { MiddlewarePathMapping, type MiddlewareHandler } from "./path/middlewarePathMapping";
 import { type PathMappingHandler } from "./path/pathMapping";
@@ -33,12 +34,12 @@ class BreadRouter {
         this.handlers.GET.add(path, handler);
     }
 
-    public async applyMiddlewares(request: Request): Promise<Response> {
+    public async applyMiddlewares(request: Request, server?: Server): Promise<Response> {
         const handlers = this.middleware.getHandlers(new URL(request.url).pathname);
-        return this.executeHandlers(request, handlers);
+        return this.executeHandlers(request, handlers, server);
     }
 
-    private async executeHandlers(request: Request, handlers: PathMappingHandler<MiddlewareHandler>[]): Promise<Response> {
+    private async executeHandlers(request: Request, handlers: PathMappingHandler<MiddlewareHandler>[], server?: Server): Promise<Response> {
         let index = -1;
         const next = async (): Promise<Response> => {
             index++;
@@ -49,15 +50,15 @@ class BreadRouter {
                     if (url === "") {
                         url = "/";
                     }
-                    const context = new BreadContext(new Request(url, request));
+                    const context = new BreadContext(new Request(url, request), server);
                     return handler.middleware(context, next);
                 }
-                return handler(new BreadContext(request), next);
+                return handler(new BreadContext(request, server), next);
             } else {
                 const handler = this.getMethodHandler(request);
 
                 if (typeof handler === "function") {
-                    return handler(new BreadContext(request));
+                    return handler(new BreadContext(request, server));
                 }
                 // Default response if no middleware provides a response
                 return new Response('Not Found', { status: 404 });
