@@ -1,4 +1,4 @@
-import type { ServeOptions } from "bun";
+import type { ServeOptions, Server } from "bun";
 import { BreadRouter } from "./internal/router";
 import type { RouteHandlerFunction } from "./internal/path/routePathMapping";
 import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapping";
@@ -15,7 +15,7 @@ class Bread implements ServeOptions {
         this.port = port;
     }
 
-    public fetch = async (request: Request): Promise<Response> => {
+    public fetch = async (request: Request, server?: Server): Promise<Response> => {
         return this.router.applyMiddlewares(request);
     }
 
