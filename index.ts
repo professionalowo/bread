@@ -1,3 +1,4 @@
+import type { ServeOptions } from "bun";
 import { Bread } from "./src/bread";
 import { log } from "./src/middlewares/log";
 import { serveStatic } from "./src/middlewares/serveStatic";
@@ -18,4 +19,4 @@ bread.use("/api", api);
 bread.use("/", serveStatic({ file: "./public/index.html" }));
 
 console.log(`Server running on http://localhost:${bread.port}`);
-Bun.serve(bread);
+Bun.serve<ServeOptions>(bread);

@@ -5,7 +5,6 @@ import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapp
 import type { BreadContext } from "./internal/context/context";
 
 export type BreadOptions = Partial<{ port: number }>;
-
 /**
  * @implements {ServeOptions}
  */
