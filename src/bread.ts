@@ -1,4 +1,4 @@
-import type { ServeOptions } from "bun";
+import type { ServeOptions, Server, WebSocketHandler } from "bun";
 import { BreadRouter } from "./internal/router";
 import type { RouteHandlerFunction } from "./internal/path/routePathMapping";
 import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapping";
@@ -13,12 +13,13 @@ export type BreadOptions = Partial<{ port: number }>;
 class Bread implements ServeOptions {
     protected readonly router = new BreadRouter();
     public readonly port?: number;
+    private websocket?: WebSocketHandler<ServeOptions>;
     constructor({ port }: BreadOptions = { port: 3000 }) {
         this.port = port;
     }
 
-    public fetch = async (request: Request): Promise<Response> => {
-        return this.router.applyMiddlewares(request);
+    public fetch = async (request: Request, server?: Server): Promise<Response> => {
+        return this.router.applyMiddlewares(request, server);
     }
 
     public middleware = async ({ request }: BreadContext, next: Next): Promise<Response> => {
@@ -47,6 +48,10 @@ class Bread implements ServeOptions {
 
     public get(path: string, handler: RouteHandlerFunction): void {
         this.router.addGet(path, handler);
+    }
+
+    public ws(handler: NonNullable<typeof this.websocket>) {
+        this.websocket = handler;
     }
 }
 
