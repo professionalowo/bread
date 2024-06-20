@@ -9,8 +9,11 @@ export function serveStatic(props: ServeStaticOptions): MiddlewareHandler {
 }
 
 function handleStaticFile({ file: filePath }: { file: string }): MiddlewareHandler {
-    return async (c) => {
+    return async (c, next) => {
         const f = file(filePath);
+        if (!await f.exists()) {
+            return next();
+        }
         return new Response(f, {
             headers: {
                 "Content-Type": `${f.type}`,
@@ -20,9 +23,12 @@ function handleStaticFile({ file: filePath }: { file: string }): MiddlewareHandl
 }
 function handleStaticDir({ root }: { root: string }): MiddlewareHandler {
     const sanitizedRoot = sanitize(root);
-    return async ({ request }) => {
+    return async ({ request }, next) => {
         const { pathname } = new URL(request.url);
         const f = file(`${sanitizedRoot}${pathname}`);
+        if (!await f.exists()) {
+            return next();
+        }
         return new Response(f, {
             headers: {
                 "Content-Type": `${f.type}`,
