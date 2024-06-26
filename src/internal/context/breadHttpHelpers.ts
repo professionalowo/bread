@@ -6,7 +6,7 @@ export class BreadHelpers {
         this.server = server;
     }
 
-    public json<T extends {}>(arg: T, init?: ResponseInit | undefined): Response {
+    public json<T extends {}>(arg: T, init?: ResponseInit): Response {
         return new Response(JSON.stringify(arg),
             {
                 ...init,
@@ -14,7 +14,8 @@ export class BreadHelpers {
             });
     }
 
-    public text(arg: string, init?: ResponseInit | undefined): Response {
+    public text(...args: ConstructorParameters<typeof Response>): Response {
+        const [arg, init] = args;
         return new Response(arg,
             {
                 ...init,
@@ -22,7 +23,8 @@ export class BreadHelpers {
             });
     }
 
-    public html(arg: string, init?: ResponseInit | undefined): Response {
+    public html(...args: ConstructorParameters<typeof Response>): Response {
+        const [arg, init] = args;
         return new Response(arg,
             {
                 ...init,
