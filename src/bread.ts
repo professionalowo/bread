@@ -4,14 +4,16 @@ import type { RouteHandlerFunction } from "./internal/path/routePathMapping";
 import type { MiddlewareHandler, Next } from "./internal/path/middlewarePathMapping";
 import type { BreadContext } from "./internal/context/context";
 
+
 export type BreadOptions = Partial<{ port: number }>;
+
 /**
  * @implements {ServeOptions}
  */
 class Bread implements ServeOptions {
     protected readonly router = new BreadRouter();
-    protected websocket?: WebSocketHandler<ServeOptions>;
     public readonly port?: number;
+    private websocket?: WebSocketHandler<ServeOptions>;
     constructor({ port }: BreadOptions = { port: 3000 }) {
         this.port = port;
     }
@@ -48,10 +50,10 @@ class Bread implements ServeOptions {
         this.router.addGet(path, handler);
     }
 
-    public ws(handler: NonNullable<typeof this.websocket>): void {
+    public ws(handler: NonNullable<typeof this.websocket>) {
         this.websocket = handler;
     }
 }
 
 
-export { Bread, type MiddlewareHandler, type BreadContext };
+export { Bread, type MiddlewareHandler };
