@@ -1,4 +1,4 @@
-import type { Bread, BreadContext } from "../../bread";
+import { type Bread, type BreadContext } from "../../bread";
 import { PathMapping, type PathMappingHandler } from "./pathMapping";
 export type Next = {
     (): Promise<Response>
